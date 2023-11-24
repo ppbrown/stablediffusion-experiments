@@ -35,7 +35,7 @@ def tokenize_text(text):
     # iid is expected to look like
     #   tensor([[49406,   320,  3638,  2677, 49407]])
 
-    print(text , "= " , iid[0,1].item())
+    print(text , "= " , iid)
 
 def tokenize_word(text):
     tokens = processor(text, return_tensors="pt")
