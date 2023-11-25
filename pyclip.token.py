@@ -11,6 +11,7 @@
 
 import clip
 import torch
+import sys
 
 # To see other clip model names for this, use
 # clip.available_models()
@@ -29,6 +30,7 @@ def init():
     print("done")
 
 def tokenize_text(text):
+    print(text+":",file=sys.stderr)
     tokens = clip.tokenize(text)
 
     print(tokens)
@@ -51,12 +53,14 @@ def tokenize_word(text):
     print(text , "= " , tensor1[1:-1].tolist())
 
 
-print("Skipping init")
+print("Skipping init",file=sys.stderr)
+# We only need to use init if we actually use the model
 #init()
 
 #input_text = "A Large Tree"
 #input_text = "Large"
 input_text = "unworthier"
+input_text = "unworthy"
 tokenize_text(input_text)
 #tokenize_word(input_text)
 
