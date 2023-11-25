@@ -17,10 +17,9 @@ print("loading "+filename)
 
 model=safe_open(filename,framework="pt")
 
-import sys
 # We want a sorted list of desired keys on stdin,
 # so that it will be easier to compare outputs across files
 for key in sys.stdin:
     key=key.rstrip()
-    print(model[key])
+    print(model.get_tensor(key))
 
