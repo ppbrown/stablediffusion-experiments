@@ -29,13 +29,19 @@ def init():
     processor = CLIPProcessor.from_pretrained(clipsrc)
     print("done")
 
+# The full printout of the return, shows that it gives 
+# "input_ids" and "attention_mask".
+# Without the attention mask, some pipelines expect the tensor to be
+# 0-padded out to 77 items
 def tokenize_text(text):
-    tokens = processor(text, return_tensors="pt")
-    iid = tokens["input_ids"]
+    #tokens = processor(text, return_tensors="pt")
+    tokens = processor(text)
+    #iid = tokens["input_ids"]
     # iid is expected to look like
     #   tensor([[49406,   320,  3638,  2677, 49407]])
+    #print(text , "= " , iid)
 
-    print(text , "= " , iid)
+    print(tokens)
 
 def tokenize_word(text):
     tokens = processor(text, return_tensors="pt")
