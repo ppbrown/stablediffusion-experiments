@@ -18,7 +18,10 @@ def init():
 def tokenize_text(text):
     tokens = processor(text, return_tensors="pt")
     tokens = tokens["input_ids"]
-    print(text , "= " , tokens)
+    print(text , "= " , tokens[0].tolist())
+# JUST print out the numbers, for now
+#    for t in tokens:
+#        print(t)
 
 # Act like you only care about the first word,
 # even if you pass in multiple
@@ -30,7 +33,9 @@ def tokenize_word(text):
     # The first and last numbers are throwaway
     tensor1= iid[0]
     #print(text , "= " , tensor1)
-    print(text , "= " , tensor1[1:-1].tolist())
+#    print(text , "= " , tensor1[1:-1].tolist())
+    for t in tensor1[1:-1].tolist():
+        print(t)
 
 
 
@@ -40,6 +45,6 @@ print("Reading from stdin now...",file=sys.stderr)
 
 for line in sys.stdin:
     input_text = line.rstrip()
-    #tokenize_text(input_text)
-    tokenize_word(input_text)
+    tokenize_text(input_text)
+    #tokenize_word(input_text)
 
