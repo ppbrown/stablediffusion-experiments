@@ -23,44 +23,40 @@ with open("fullword.json","r") as f:
     tokendict = json.load(f)
 wordlist = list(tokendict.keys())
 
-print("read in embeddingsnow",file=sys.stderr)
-
+print("read in embeddings now",file=sys.stderr)
 
 model = safe_open(embed_file,framework="pt",device="cuda")
 embs=model.get_tensor("embeddings")
 embs.to(device)
-
-
 print("Shape of loaded embeds =",embs.shape)
-print("calculate distances now")
 
+# ("calculate distances now")
 distances = torch.cdist(embs, embs, p=2)
 print("distances shape is",distances.shape)
 
-targetword="cat"
-targetindex=wordlist.index(targetword)
-print("index of cat is",targetindex)
-targetdistances=distances[targetindex]
+# Find 10 closest tokens to targetword.
+# Will include the word itself
+def find_closest(targetword):
+    try:
+        targetindex=wordlist.index(targetword)
+    except ValueError:
+        print(targetword,"not found")
+        return
 
-smallest_distances, smallest_indices = torch.topk(targetdistances, 5, largest=False)
+    #print("index of",targetword,"is",targetindex)
+    targetdistances=distances[targetindex]
 
-smallest_distances=smallest_distances.tolist()
-smallest_indices=smallest_indices.tolist()
+    smallest_distances, smallest_indices = torch.topk(targetdistances, 10, largest=False)
 
-print("The smallest distance values are",smallest_distances)
-print("The smallest index values are",smallest_indices)
+    smallest_distances=smallest_distances.tolist()
+    smallest_indices=smallest_indices.tolist()
+    for d,i in zip(smallest_distances,smallest_indices):
+        print(wordlist[i],"(",d,")")
+    #print("The smallest distance values are",smallest_distances)
+    #print("The smallest index values are",smallest_indices)
 
-for t in smallest_indices:
-    print(wordlist[t])
 
-
-
-"""
-import torch.nn.functional as F
-pos=0
-for word in tokendict.keys():
-    print("Calculating distances from",word)
-    home=embs[pos]
-    #distances = torch.cdist(embs, home.unsqueeze(0), p=2)
-    #distance = F.pairwise_distance(home, embs[,p=2).item()
-"""
+print("Input a word now:")
+for line in sys.stdin:
+    input_text = line.rstrip()
+    find_closest(input_text)
