@@ -28,10 +28,23 @@ print("read in embeddingsnow",file=sys.stderr)
 model = safe_open(embed_file,framework="pt",device="cuda")
 embs=model.get_tensor("embeddings")
 
+embs.to(device)
 
-print("Shape of result = ",embs.shape)
+
+print("Shape of loaded embeds =",embs.shape)
 
 
 print("calculate distances now")
 
+distances = torch.cdist(embs, embs, p=2)
+print("distances shape is",distances.shape)
 
+"""
+import torch.nn.functional as F
+pos=0
+for word in tokendict.keys():
+    print("Calculating distances from",word)
+    home=embs[pos]
+    #distances = torch.cdist(embs, home.unsqueeze(0), p=2)
+    #distance = F.pairwise_distance(home, embs[,p=2).item()
+"""
