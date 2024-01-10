@@ -21,23 +21,39 @@ device=torch.device("cuda")
 print("read in words from json now",file=sys.stderr)
 with open("fullword.json","r") as f:
     tokendict = json.load(f)
+wordlist = list(tokendict.keys())
 
 print("read in embeddingsnow",file=sys.stderr)
 
 
 model = safe_open(embed_file,framework="pt",device="cuda")
 embs=model.get_tensor("embeddings")
-
 embs.to(device)
 
 
 print("Shape of loaded embeds =",embs.shape)
-
-
 print("calculate distances now")
 
 distances = torch.cdist(embs, embs, p=2)
 print("distances shape is",distances.shape)
+
+targetword="cat"
+targetindex=wordlist.index(targetword)
+print("index of cat is",targetindex)
+targetdistances=distances[targetindex]
+
+smallest_distances, smallest_indices = torch.topk(targetdistances, 5, largest=False)
+
+smallest_distances=smallest_distances.tolist()
+smallest_indices=smallest_indices.tolist()
+
+print("The smallest distance values are",smallest_distances)
+print("The smallest index values are",smallest_indices)
+
+for t in smallest_indices:
+    print(wordlist[t])
+
+
 
 """
 import torch.nn.functional as F
