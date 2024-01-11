@@ -47,14 +47,14 @@ def standard_embed_calc(text):
 
 init()
 
-print("read in words from json now",file=sys.stderr)
-with open("fullword.json","r") as f:
-    tokendict = json.load(f)
+with open("dictionary","r") as f:
+    tokendict = f.readlines()
+    tokendict = [token.strip() for token in tokendict]  # Remove trailing newlines
 
 print("generate embeddings for each now",file=sys.stderr)
 count=1
 all_embeddings = []
-for word in tokendict.keys():
+for word in tokendict:
     emb = standard_embed_calc(word)
     emb=emb.unsqueeze(0) # stupid matrix magic to make the cat work
     all_embeddings.append(emb)
